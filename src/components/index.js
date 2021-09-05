@@ -1,4 +1,4 @@
-import CommentForm from './commectForm';
+import CommentForm from './commentForm';
 
 
 export {CommentForm}
