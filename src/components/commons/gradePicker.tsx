@@ -13,7 +13,7 @@ export default function GradePicker(props:GradePickerProps){
     const colors2 = ['#000000','#1a1a1a','#333333','#4d4d4d','#666666','#808080','#999999','#a6a6a6','#b3b3b3','#bfbfbf']
 
     return(
-        <React.Fragment>
+        <React.div>
             <span className="row" style={{justifyContent: 'center'}}>
             {
                 values.map((val,index) => 
@@ -25,6 +25,6 @@ export default function GradePicker(props:GradePickerProps){
                     )
             }
             </span>
-        </React.Fragment>
+        </React.div>
     )
 }

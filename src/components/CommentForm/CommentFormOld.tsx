@@ -4,9 +4,8 @@
 // Anonmymize usernames on all screens
 
 import React, { useEffect, useState } from "react";
-import { Varient } from "../shared/varients";
-import { ColoredCard, GradePicker, MultiSelectPicker } from "./commons";
-import "../css/commectForm.css";
+import { Varient } from "../../shared/varients";
+import { ColoredCard, GradePicker, MultiSelectPicker } from "../commons";
 import { integrate } from "src/shared/bagelDb";
 import { useKeycloak } from "@react-keycloak/web";
 import { getRandomPost, postReport } from "src/shared/requests_api";
@@ -145,7 +144,7 @@ export default function CommentForm() {
           textHeader={postToShow.username}
           footer={buildFooter()}
         >
-          <React.Fragment>
+          <React.div>
             {postToShow.text.split("\n").map(function (item, key) {
               return (
                 <span key={key}>
@@ -213,7 +212,7 @@ export default function CommentForm() {
               }}
               pickedValue={postToShow.sexual_hurt}
             />
-          </React.Fragment>
+          </React.div>
         </ColoredCard>
       )}
     </div>
