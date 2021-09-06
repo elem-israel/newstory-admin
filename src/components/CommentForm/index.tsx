@@ -13,6 +13,7 @@ import {
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import Rating from "@material-ui/lab/Rating";
+import { useFormik } from "formik";
 import strings from "./strings.json";
 import ErrorIcon from "@material-ui/icons/Error";
 
@@ -60,6 +61,15 @@ const reportReasons: Array<string> = [
 ];
 
 const CommentForm: FunctionComponent<CommentFormProps> = () => {
+  const formik = useFormik({
+    initialValues: {
+      reason: "foobar@example.com",
+      password: "foobar",
+    },
+    onSubmit: (values: any) => {
+      alert(JSON.stringify(values, null, 2));
+    },
+  });
   const classes = useStyles();
   return (
     <Paper>
@@ -83,6 +93,10 @@ const CommentForm: FunctionComponent<CommentFormProps> = () => {
         rows={4}
         defaultValue="Default Value"
         variant="outlined"
+        value={formik.values.reason}
+        onChange={formik.handleChange}
+        error={formik.touched.reason && Boolean(formik.errors.reason)}
+        helperText={formik.touched.reason && formik.errors.reason}
       />
       <FormControl component="fieldset" className={classes.formControl}>
         <FormLabel component="legend">{strings.reportReason.title}</FormLabel>
