@@ -8,6 +8,7 @@ import {
   FormLabel,
   makeStyles,
   TextField,
+  Button,
 } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
@@ -103,7 +104,13 @@ const CommentForm: FunctionComponent<CommentFormProps> = () => {
         variant="outlined"
       />
       <CustomRating label={strings.generalHarm.title} name="general-harm" />
-      <CustomRating label={strings.sexualHarm.title} name="sexual-harm"/>
+      <CustomRating label={strings.sexualHarm.title} name="sexual-harm" />
+      <Button variant="contained" color="primary">
+        {strings.submit}
+      </Button>
+      <Button variant="contained" color="secondary">
+        {strings.skip}
+      </Button>
     </Paper>
   );
 };

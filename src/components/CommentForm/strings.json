@@ -1,7 +1,9 @@
 {
   "reportReason": { "title": "סיבת דירוג אנליטס" },
   "quotes": { "title": "ציטוטים וצירופי מילים" },
-  "otherComments": {"title": "הערות אנליסט"},
-  "generalHarm": {"title": "סיכון לפיגעה כללית"},
-  "sexualHarm": {"title": "סיכון לפגיעה מינית"}
+  "otherComments": { "title": "הערות אנליסט" },
+  "generalHarm": { "title": "סיכון לפיגעה כללית" },
+  "sexualHarm": { "title": "סיכון לפגיעה מינית" },
+  "submit": "שלח",
+  "skip": "דלג"
 }
