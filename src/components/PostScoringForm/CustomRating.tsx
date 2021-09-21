@@ -1,7 +1,7 @@
+import React from "react";
 import { Grid, Typography } from "@material-ui/core";
 import { Alert, Rating } from "@material-ui/lab";
 import ErrorIcon from "@material-ui/icons/Error";
-import "react";
 
 function CustomRating({ label, ...props }: any) {
   return (

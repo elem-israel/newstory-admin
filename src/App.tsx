@@ -1,5 +1,5 @@
+import React from "react";
 import { Container } from "@material-ui/core";
-import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import { RightNav, MainNav } from "./navs";
 import { useKeycloak } from "@react-keycloak/web";

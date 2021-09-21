@@ -38,12 +38,7 @@ function Comment() {
       onSkip={() => setCurrentPost(null)}
       onSubmit={async (values: FormValues) => {
         setLoading(true);
-        await comment.submitReport(currentPost, values.sexualHarm, {
-          otherComments: values.otherComments,
-          quotesAndWords: values.quotesAndWords,
-          generalHarm: values.generalHarm,
-          reportReasons: values.reportReasons,
-        });
+        await comment.submitReport(currentPost, values.sexualHarm, values);
         setCurrentPost(null);
         setLoading(false);
       }}

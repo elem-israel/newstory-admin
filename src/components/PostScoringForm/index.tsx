@@ -41,13 +41,23 @@ interface CommentFormProps {
   onSkip: () => void;
   onSubmit: (values: FormValues) => void;
 }
+
 function validate(values: FormValues) {
   const errors: { sexualHarm?: string } = {};
   if (!values.sexualHarm) {
-    errors.sexualHarm = "Required";
+    errors.sexualHarm = strings.required;
   }
   return errors;
 }
+
+const HtmlWithNewLines = ({ text }: { text: string }) => {
+  return text.split("\n").map((item, key) => (
+    <span key={key}>
+      {item}
+      <br />
+    </span>
+  )) as any;
+};
 
 const CommentForm: FunctionComponent<CommentFormProps> = (
   props: CommentFormProps
@@ -74,17 +84,10 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
           תגובה
         </Typography>
         <Typography variant="body1" gutterBottom className={classes.caption}>
-          {post.caption.split("\n").map(function (item, key) {
-            return (
-              <span key={key}>
-                {item}
-                <br />
-              </span>
-            );
-          })}
+          <HtmlWithNewLines text={post.caption} />
         </Typography>
         <TextField
-          id="outlined-multiline-static"
+          id="quotesAndWords"
           label={strings.commentForm.quotes}
           multiline
           fullWidth
@@ -129,7 +132,7 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
           </FormGroup>
         </FormControl>
         <TextField
-          id="other-comments"
+          id="otherComments"
           label={strings.commentForm.otherComments}
           multiline
           rows={4}
@@ -147,7 +150,6 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
         />
         <CustomRating
           label={strings.commentForm.generalHarm}
-          name="general-harm"
           onChange={(e: any, v: number) =>
             formik.setFieldValue("generalHarm", v)
           }
@@ -155,7 +157,6 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
         />
         <CustomRating
           label={strings.commentForm.sexualHarm}
-          name="sexual-harm"
           onChange={(e: any, v: number) =>
             formik.setFieldValue("sexualHarm", v)
           }
