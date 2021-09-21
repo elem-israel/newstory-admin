@@ -2,7 +2,7 @@ import { Container } from "@material-ui/core";
 import React, { useEffect } from "react";
 import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
 import {RightNav,MainNav} from './navs';
-import CommentForm from './components/CommentForm/CommentFormOld';
+import CommentForm from './components/CommentForm';
 import { useKeycloak } from '@react-keycloak/web';
 import LoginPage from './components/LoginPage';
 import {PrivateRoute,PublicRoute} from './components/commons';

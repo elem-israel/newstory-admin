@@ -1,6 +1,5 @@
-import React, { FunctionComponent, useState } from "react";
+import React, { FunctionComponent, useState, useEffect } from "react";
 import {
-  Box,
   Checkbox,
   FormControl,
   FormControlLabel,
@@ -12,10 +11,11 @@ import {
 } from "@material-ui/core";
 import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
-import Rating from "@material-ui/lab/Rating";
 import { useFormik } from "formik";
-import strings from "./strings.json";
-import ErrorIcon from "@material-ui/icons/Error";
+import strings from "../../strings.json";
+import CustomRating from "./CustomRating"
+import api from "./api";
+import { DbString } from "./types";
 
 interface CommentFormProps {}
 
@@ -31,23 +31,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function CustomRating(props: any) {
-  const [value, setValue] = useState(null);
-  return (
-    <div>
-      <Typography component="legend">{props.label}</Typography>
-      <Rating
-        max={10}
-        name={props.name}
-        icon={<ErrorIcon fontSize="inherit" />}
-        onChange={(event: any, newValue: any) => {
-          setValue(newValue);
-        }}
-      />
-      {value !== null && <Box ml={2}>{value}</Box>}
-    </div>
-  );
-}
 
 const reportReasons: Array<string> = [
   "תמונה עם צבעים קודרים",
@@ -60,12 +43,32 @@ const reportReasons: Array<string> = [
   "מילה מעוררת חשד",
 ];
 
+interface FormValues {
+  quotesAndWords: string | null;
+  otherComments: string | null;
+  reportReasons: string[];
+  generalHarm: number;
+  sexualHarm: number;
+}
+
 const CommentForm: FunctionComponent<CommentFormProps> = () => {
+  const [reportReasons, setReportReasons] = useState<DbString[]>([]);
+
+  useEffect(() => {
+    reportReasons.length == 0 &&
+      api
+        .getStringFromCategory("reportReason")
+        .then((res) => setReportReasons(res));
+  });
+  const initialValues: FormValues = {
+    quotesAndWords: null,
+    otherComments: null,
+    reportReasons: [],
+    generalHarm: 0,
+    sexualHarm: 0,
+  };
   const formik = useFormik({
-    initialValues: {
-      reason: "foobar@example.com",
-      password: "foobar",
-    },
+    initialValues,
     onSubmit: (values: any) => {
       alert(JSON.stringify(values, null, 2));
     },
@@ -73,58 +76,105 @@ const CommentForm: FunctionComponent<CommentFormProps> = () => {
   const classes = useStyles();
   return (
     <Paper>
-      <Typography variant="h5" gutterBottom>
-        תגובה
-      </Typography>
-      <Typography variant="body1" gutterBottom>
-        {comment.split("\n").map(function (item, key) {
-          return (
-            <span key={key}>
-              {item}
-              <br />
-            </span>
-          );
-        })}
-      </Typography>
-      <TextField
-        id="outlined-multiline-static"
-        label={strings.quotes.title}
-        multiline
-        rows={4}
-        defaultValue="Default Value"
-        variant="outlined"
-        value={formik.values.reason}
-        onChange={formik.handleChange}
-        error={formik.touched.reason && Boolean(formik.errors.reason)}
-        helperText={formik.touched.reason && formik.errors.reason}
-      />
-      <FormControl component="fieldset" className={classes.formControl}>
-        <FormLabel component="legend">{strings.reportReason.title}</FormLabel>
-        <FormGroup>
-          {reportReasons.map((label) => (
-            <FormControlLabel
-              control={<Checkbox name="gilad" />}
-              label={label}
-            />
-          ))}
-        </FormGroup>
-      </FormControl>
-      <TextField
-        id="outlined-multiline-static"
-        label={strings.otherComments.title}
-        multiline
-        rows={4}
-        defaultValue="Default Value"
-        variant="outlined"
-      />
-      <CustomRating label={strings.generalHarm.title} name="general-harm" />
-      <CustomRating label={strings.sexualHarm.title} name="sexual-harm" />
-      <Button variant="contained" color="primary">
-        {strings.submit}
-      </Button>
-      <Button variant="contained" color="secondary">
-        {strings.skip}
-      </Button>
+      <form onSubmit={formik.handleSubmit}>
+        <Typography variant="h5" gutterBottom>
+          תגובה
+        </Typography>
+        <Typography variant="body1" gutterBottom>
+          {comment.split("\n").map(function (item, key) {
+            return (
+              <span key={key}>
+                {item}
+                <br />
+              </span>
+            );
+          })}
+        </Typography>
+        <TextField
+          id="outlined-multiline-static"
+          label={strings.commentForm.quotes}
+          multiline
+          fullWidth
+          rows={4}
+          variant="outlined"
+          value={formik.values.quotesAndWords}
+          onChange={formik.handleChange}
+          error={
+            formik.touched.quotesAndWords &&
+            Boolean(formik.errors.quotesAndWords)
+          }
+          helperText={
+            formik.touched.quotesAndWords && formik.errors.quotesAndWords
+          }
+        />
+        <FormControl component="fieldset" className={classes.formControl}>
+          <FormLabel component="legend">
+            {strings.commentForm.reportReason}
+          </FormLabel>
+          <FormGroup>
+            {reportReasons.map((reason) => (
+              <FormControlLabel
+                control={
+                  <Checkbox
+                    name={`${reason.category}-${reason.key}`}
+                    onChange={(event) => {
+                      const newValue = formik.values.reportReasons;
+                      if (event.target.checked) {
+                        newValue.push(reason.key);
+                      } else {
+                        const i = newValue.indexOf(reason.key);
+                        newValue.splice(i, 1);
+                      }
+                      return formik.setFieldValue("reportReasons", newValue);
+                    }}
+                    checked={formik.values.reportReasons.includes(reason.key)}
+                  />
+                }
+                label={reason.value}
+              />
+            ))}
+          </FormGroup>
+        </FormControl>
+        <TextField
+          id="other-comments"
+          label={strings.commentForm.otherComments}
+          multiline
+          rows={4}
+          variant="outlined"
+          fullWidth
+          value={formik.values.otherComments}
+          onChange={formik.handleChange}
+          error={
+            formik.touched.quotesAndWords &&
+            Boolean(formik.errors.quotesAndWords)
+          }
+          helperText={
+            formik.touched.otherComments && formik.errors.otherComments
+          }
+        />
+        <CustomRating
+          label={strings.commentForm.generalHarm}
+          name="general-harm"
+          onChange={(e: any, v: number) =>
+            formik.setFieldValue("generalHarm", v)
+          }
+          value={formik.values.generalHarm}
+        />
+        <CustomRating
+          label={strings.commentForm.sexualHarm}
+          name="sexual-harm"
+          onChange={(e: any, v: number) =>
+            formik.setFieldValue("sexualHarm", v)
+          }
+          value={formik.values.sexualHarm}
+        />
+        <Button variant="contained" color="primary">
+          {strings.submit}
+        </Button>
+        <Button variant="contained" color="secondary">
+          {strings.skip}
+        </Button>
+      </form>
     </Paper>
   );
 };

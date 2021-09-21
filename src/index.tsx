@@ -3,6 +3,7 @@ import ReactDOM from "react-dom";
 import CssBaseline from "@material-ui/core/CssBaseline";
 import { ThemeProvider } from "@material-ui/core/styles";
 import App from "./App";
+import RTL from "./rtl";
 import theme from "./theme";
 import { ReactKeycloakProvider } from "@react-keycloak/web";
 import keycloak from "./shared/keycloak";
@@ -22,8 +23,10 @@ ReactDOM.render(
     onTokens={tokenLogger}
   >
     <ThemeProvider theme={theme}>
-      <CssBaseline />
-      <App />
+      <RTL>
+        <CssBaseline />
+        <App />
+      </RTL>
     </ThemeProvider>
   </ReactKeycloakProvider>,
   document.querySelector("#root")
