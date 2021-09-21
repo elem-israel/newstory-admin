@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import CommentForm, { FormValues } from "../components/CommentForm";
-import comment from "../api/comment";
+import CommentForm, { FormValues } from "../components/PostScoringForm";
+import comment from "../api/postScoring";
 import { CircularProgress } from "@material-ui/core";
 
 function Comment() {
