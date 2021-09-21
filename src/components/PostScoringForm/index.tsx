@@ -14,7 +14,6 @@ import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import strings from "../../strings.json";
 import CustomRating from "./CustomRating";
-import { PostAddSharp } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -42,6 +41,13 @@ interface CommentFormProps {
   onSkip: () => void;
   onSubmit: (values: FormValues) => void;
 }
+function validate(values: FormValues) {
+  const errors: { sexualHarm?: string } = {};
+  if (!values.sexualHarm) {
+    errors.sexualHarm = "Required";
+  }
+  return errors;
+}
 
 const CommentForm: FunctionComponent<CommentFormProps> = (
   props: CommentFormProps
@@ -57,6 +63,7 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
   const formik = useFormik({
     initialValues,
     onSubmit,
+    validate,
   });
   const classes = useStyles();
   const newLineChars = post.caption.match(/\n/g) || [];
@@ -153,6 +160,7 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
             formik.setFieldValue("sexualHarm", v)
           }
           value={formik.values.sexualHarm}
+          error={formik.touched.sexualHarm && formik.errors.sexualHarm}
         />
         <Button variant="contained" color="primary" type="submit">
           {strings.submit}
