@@ -7,4 +7,5 @@ declare interface DbString {
 
 declare interface Post {
   caption: string;
+  instagram_post_id: string;
 }

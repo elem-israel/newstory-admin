@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import CommentForm from "../components/CommentForm";
+import CommentForm, { FormValues } from "../components/CommentForm";
 import comment from "../api/comment";
 import { CircularProgress } from "@material-ui/core";
 
@@ -7,6 +7,7 @@ function Comment() {
   const [reportReasons, setReportReasons] = useState<DbString[] | null>(null);
   const [posts, setPosts] = useState<Post[] | null>(null);
   const [currentPost, setCurrentPost] = useState<Post | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     !reportReasons &&
@@ -26,12 +27,27 @@ function Comment() {
   useEffect(() => {
     if (!currentPost && posts && posts.length > 0) {
       setCurrentPost(posts[0]);
-      setPosts(posts.splice(0, 1));
+      setPosts(posts.splice(1));
     }
   });
 
-  return reportReasons && currentPost ? (
-    <CommentForm reportReasons={reportReasons} />
+  return reportReasons && currentPost && !loading ? (
+    <CommentForm
+      reportReasons={reportReasons}
+      post={currentPost}
+      onSkip={() => setCurrentPost(null)}
+      onSubmit={async (values: FormValues) => {
+        setLoading(true);
+        await comment.submitReport(currentPost, values.sexualHarm, {
+          otherComments: values.otherComments,
+          quotesAndWords: values.quotesAndWords,
+          generalHarm: values.generalHarm,
+          reportReasons: values.reportReasons,
+        });
+        setCurrentPost(null);
+        setLoading(false);
+      }}
+    />
   ) : (
     <CircularProgress />
   );

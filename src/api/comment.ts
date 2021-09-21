@@ -14,7 +14,17 @@ async function getRandomPosts(n: number): Promise<Post[]> {
     .then((res) => res.data);
 }
 
+async function submitReport(post: Post, score: number, details: any) {
+  return axios
+    .post(
+      `${process.env.REACT_APP_API_HOST}/post/${post.instagram_post_id}/report`,
+      { score, details: JSON.stringify(details) }
+    )
+    .then((res) => res.data);
+}
+
 export default {
   getStringFromCategory,
   getRandomPosts,
+  submitReport,
 };

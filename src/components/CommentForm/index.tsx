@@ -14,13 +14,7 @@ import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import strings from "../../strings.json";
 import CustomRating from "./CustomRating";
-
-interface CommentFormProps {
-  reportReasons: DbString[];
-}
-
-const comment = `כמה מילים עם מעבר שורה
-אחד כדי לראות את האפקט`;
+import { PostAddSharp } from "@material-ui/icons";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -29,9 +23,12 @@ const useStyles = makeStyles((theme) => ({
   formControl: {
     margin: theme.spacing(3),
   },
+  caption: {
+    minHeight: theme.spacing(10),
+  },
 }));
 
-interface FormValues {
+export interface FormValues {
   quotesAndWords: string | null;
   otherComments: string | null;
   reportReasons: string[];
@@ -39,10 +36,17 @@ interface FormValues {
   sexualHarm: number;
 }
 
+interface CommentFormProps {
+  reportReasons: DbString[];
+  post: Post;
+  onSkip: () => void;
+  onSubmit: (values: FormValues) => void;
+}
+
 const CommentForm: FunctionComponent<CommentFormProps> = (
   props: CommentFormProps
 ) => {
-  const { reportReasons } = props;
+  const { reportReasons, post, onSkip, onSubmit } = props;
   const initialValues: FormValues = {
     quotesAndWords: null,
     otherComments: null,
@@ -52,19 +56,18 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
   };
   const formik = useFormik({
     initialValues,
-    onSubmit: (values: any) => {
-      alert(JSON.stringify(values, null, 2));
-    },
+    onSubmit,
   });
   const classes = useStyles();
+  const newLineChars = post.caption.match(/\n/g) || [];
   return (
     <Paper>
       <form onSubmit={formik.handleSubmit}>
         <Typography variant="h5" gutterBottom>
           תגובה
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          {comment.split("\n").map(function (item, key) {
+        <Typography variant="body1" gutterBottom className={classes.caption}>
+          {post.caption.split("\n").map(function (item, key) {
             return (
               <span key={key}>
                 {item}
@@ -151,10 +154,10 @@ const CommentForm: FunctionComponent<CommentFormProps> = (
           }
           value={formik.values.sexualHarm}
         />
-        <Button variant="contained" color="primary">
+        <Button variant="contained" color="primary" type="submit">
           {strings.submit}
         </Button>
-        <Button variant="contained" color="secondary">
+        <Button variant="contained" color="secondary" onClick={onSkip}>
           {strings.skip}
         </Button>
       </form>
