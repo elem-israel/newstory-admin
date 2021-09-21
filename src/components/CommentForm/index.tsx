@@ -13,11 +13,11 @@ import Paper from "@material-ui/core/Paper";
 import Typography from "@material-ui/core/Typography";
 import { useFormik } from "formik";
 import strings from "../../strings.json";
-import CustomRating from "./CustomRating"
-import api from "./api";
-import { DbString } from "./types";
+import CustomRating from "./CustomRating";
 
-interface CommentFormProps {}
+interface CommentFormProps {
+  reportReasons: DbString[];
+}
 
 const comment = `כמה מילים עם מעבר שורה
 אחד כדי לראות את האפקט`;
@@ -31,18 +31,6 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-
-const reportReasons: Array<string> = [
-  "תמונה עם צבעים קודרים",
-  "תוכן בנושא זנות",
-  "תוכן בנושא אובדנות",
-  "תוכן בנושא הפרעות אכילה",
-  "תוכן בנושא דימוי גוף",
-  "תוכן בנושא פגיעה עצמית",
-  "תוכן בנושא התמכרויות",
-  "מילה מעוררת חשד",
-];
-
 interface FormValues {
   quotesAndWords: string | null;
   otherComments: string | null;
@@ -51,15 +39,10 @@ interface FormValues {
   sexualHarm: number;
 }
 
-const CommentForm: FunctionComponent<CommentFormProps> = () => {
-  const [reportReasons, setReportReasons] = useState<DbString[]>([]);
-
-  useEffect(() => {
-    reportReasons.length == 0 &&
-      api
-        .getStringFromCategory("reportReason")
-        .then((res) => setReportReasons(res));
-  });
+const CommentForm: FunctionComponent<CommentFormProps> = (
+  props: CommentFormProps
+) => {
+  const { reportReasons } = props;
   const initialValues: FormValues = {
     quotesAndWords: null,
     otherComments: null,
