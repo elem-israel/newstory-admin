@@ -1,0 +1,12 @@
+{
+  "commentForm": {
+    "reportReason": "סיבת דירוג אנליטס",
+    "quotes": "ציטוטים וצירופי מילים",
+    "otherComments": "הערות אנליסט",
+    "generalHarm": "סיכון לפיגעה כללית",
+    "sexualHarm": "סיכון לפגיעה מינית"
+  },
+  "submit": "שלח",
+  "skip": "דלג",
+  "required": "שדה חובה"
+}

@@ -33,12 +33,12 @@ export default function RightNav() {
                 routes.map((r,i) => 
                     <li className={location.pathname == r.path? 'active':''} key={i}>
                         { r.childrenId != undefined ? (
-                            <React.Fragment>
+                            <div>
                                 <a href={'#'+r.childrenId} data-toggle="collapse" aria-expanded="false" className="dropdown-toggle"> {r.label} </a>
                                 <ul className="collapse list-unstyled" id={r.childrenId}>
                                     {r.children.map((rchild,i2) => <div key={i2}><Link to={rchild.path}>{rchild.label}</Link></div>)}
                                 </ul>
-                            </React.Fragment>
+                            </div>
                         ) : <Link to={r.path}>{r.label}</Link>}
                     </li>
                     )
